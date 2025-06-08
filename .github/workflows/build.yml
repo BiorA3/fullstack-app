@@ -34,7 +34,7 @@ jobs:
           npm install
           npm run build
       - name: Build backend
-        working-directory: backend/PASIR_Kamil_Lenczyk
+        working-directory: Backend/PASIR_Kamil_Lenczyk
         run: mvn clean install -DskipTests
 
       - name: Set up Node.js
