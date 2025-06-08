@@ -61,7 +61,7 @@ jobs:
             -Dsonar.organization=biora3-1
             -Dsonar.projectName=BudgetApp
             -Dsonar.projectVersion=1.0
-            -Dsonar.modules=PASiR_Kamil_Lenczyk,Frontend
+            -Dsonar.modules=Backend_PASiR_Kamil_Lenczyk,Frontend
             -Dsonar.frontend.projectName=Frontend
             -Dsonar.frontend.projectBaseDir=Frontend
             -Dsonar.frontend.sources=src
