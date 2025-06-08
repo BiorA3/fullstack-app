@@ -29,21 +29,22 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Install frontend deps
-        working-directory: Frontend
-        run: |
-          npm install
-          npm run build
-      - name: Build backend
-        working-directory: Backend/PASIR_Kamil_Lenczyk
-        run: mvn clean install -DskipTests
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-    
+      - name: Install frontend deps
+        working-directory: Frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Build backend
+        working-directory: Backend/PASIR_Kamil_Lenczyk
+        run: mvn clean install -DskipTests
+
       - name: Cache SonarCloud
         uses: actions/cache@v4
         with:
@@ -52,10 +53,12 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: sonarsource/sonarcloud-github-action@v4.0.0
         with:
           projectBaseDir: ${{ github.workspace }}
           args: >
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.modules=backend,frontend
             -Dsonar.backend.projectName=Backend
             -Dsonar.backend.projectBaseDir=Backend/PASIR_Kamil_Lenczyk
@@ -66,8 +69,8 @@ jobs:
             -Dsonar.frontend.projectBaseDir=Frontend
             -Dsonar.frontend.sources=src
             -Dsonar.frontend.exclusions=**/*.spec.ts,**/*.test.tsx,**/__tests__/**
-
-            
+            -Dsonar.frontend.typescript.tsconfigPath=Frontend/tsconfig.json
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
