@@ -61,17 +61,16 @@ jobs:
             -Dsonar.organization=biora3-1
             -Dsonar.projectName=BudgetApp
             -Dsonar.projectVersion=1.0
-            -Dsonar.modules=PASiR_Kamil_Lenczyk,Frontend
-            -Dsonar.frontend.projectName=Frontend
-            -Dsonar.frontend.projectBaseDir=Frontend
-            -Dsonar.frontend.sources=src
-            -Dsonar.frontend.exclusions=**/*.spec.ts,**/*.test.tsx,**/__tests__/**
-            -Dsonar.frontend.typescript.tsconfigPath=Frontend/tsconfig.json
-            -Dsonar.backend.projectName=Backend
-            -Dsonar.backend.projectBaseDir=PASiR_Kamil_Lenczyk
-            -Dsonar.backend.sources=src/main
-            -Dsonar.backend.java.binaries=target/classes
-            -Dsonar.backend.java.source=11
+            -Dsonar.modules=backend,frontend
+            -Dfrontend.sonar.projectName=Frontend
+            -Dfrontend.sonar.projectBaseDir=Frontend
+            -Dfrontend.sonar.sources=src
+            -Dfrontend.sonar.exclusions=**/*.spec.ts,**/*.test.tsx,**/__tests__/**
+            -Dbackend.sonar.projectName=Backend
+            -Dbackend.sonar.projectBaseDir=PASiR_Kamil_Lenczyk
+            -Dbackend.sonar.sources=src/main
+            -Dbackend.sonar.java.binaries=target/classes
+            -Dbackend.sonar.java.source=11
 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
