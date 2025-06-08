@@ -1,9 +1,9 @@
-name: Biuld
-
+name: SonarCloud CI
 on:
   push:
     branches:
       - master
+  pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -20,32 +20,29 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 21
-          distribution: 'zulu'
+          distribution: "zulu"
 
       - name: Cache Maven
         uses: actions/cache@v4
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2-
-
+          restore-keys: ${{ runner.os }}-m2
+      - name: Install frontend deps
+        working-directory: Frontend
+        run: |
+          npm install
+          npm run build
       - name: Build backend
         working-directory: backend/PASIR_Kamil_Lenczyk
-        run: mvn clean install --DskipTests
+        run: mvn clean install -DskipTests
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install frontend deps
-        working-directory: frontend
-        run: npm install
-
-      - name: Build frontend
-        working-directory: frontend
-        run: npm run build
-
+    
       - name: Cache SonarCloud
         uses: actions/cache@v4
         with:
@@ -54,6 +51,26 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v5
+        with:
+          projectBaseDir: ${{ github.workspace }}
+          args: >
+            -Dsonar.projectKey=BiorA3_fullstack-app
+            -Dsonar.organization=biora3-1
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.projectName=BudgetApp
+            -Dsonar.projectVersion=1.0
+            -Dsonar.modules=backend,frontend
+            -Dfrontend.sonar.projectName=Frontend
+            -Dfrontend.sonar.projectBaseDir=Frontend
+            -Dfrontend.sonar.sources=src
+            -Dfrontend.sonar.exclusions=**/*.spec.ts,**/*.test.tsx,**/__tests__/**
+            -Dbackend.sonar.projectName=Backend
+            -Dbackend.sonar.projectBaseDir=Backend/PASIR_Kamil_Lenczyk
+            -Dbackend.sonar.sources=src/main
+            -Dbackend.sonar.java.binaries=target/classes
+            -Dbackend.sonar.java.source=11
+            
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
