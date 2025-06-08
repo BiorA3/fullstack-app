@@ -5,6 +5,7 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   build-and-analyze:
@@ -55,21 +56,17 @@ jobs:
         with:
           projectBaseDir: ${{ github.workspace }}
           args: >
-            -Dsonar.projectKey=BiorA3_fullstack-app
-            -Dsonar.organization=biora3-1
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.projectName=BudgetApp
-            -Dsonar.projectVersion=1.0
             -Dsonar.modules=backend,frontend
-            -Dfrontend.sonar.projectName=Frontend
-            -Dfrontend.sonar.projectBaseDir=Frontend
-            -Dfrontend.sonar.sources=src
-            -Dfrontend.sonar.exclusions=**/*.spec.ts,**/*.test.tsx,**/__tests__/**
-            -Dbackend.sonar.projectName=Backend
-            -Dbackend.sonar.projectBaseDir=Backend/PASIR_Kamil_Lenczyk
-            -Dbackend.sonar.sources=src/main
-            -Dbackend.sonar.java.binaries=target/classes
-            -Dbackend.sonar.java.source=11
+            -Dsonar.backend.projectName=Backend
+            -Dsonar.backend.projectBaseDir=Backend/PASIR_Kamil_Lenczyk
+            -Dsonar.backend.sources=src/main
+            -Dsonar.backend.java.binaries=target/classes
+            -Dsonar.backend.java.source=11
+            -Dsonar.frontend.projectName=Frontend
+            -Dsonar.frontend.projectBaseDir=Frontend
+            -Dsonar.frontend.sources=src
+            -Dsonar.frontend.exclusions=**/*.spec.ts,**/*.test.tsx,**/__tests__/**
+
             
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
