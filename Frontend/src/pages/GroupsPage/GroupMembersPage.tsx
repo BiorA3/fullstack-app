@@ -24,8 +24,8 @@ interface Member {
 }
 
 interface Props {
-  ?group: Group;
-  ?onBack: () => void;
+  group: Group;
+  onBack: () => void;
 }
 
 interface Debt {
